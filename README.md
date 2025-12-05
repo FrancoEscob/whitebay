@@ -45,18 +45,22 @@ Un editor visual e interactivo para crear y gestionar prompts XML para agentes d
 
 ## 🚀 Inicio Rápido
 
+### Requisitos Previos
+
+Este proyecto requiere **Bun** como gestor de paquetes y runtime. Asegúrate de tener Bun instalado antes de continuar.
+
 ### Instalación
 
 ```bash
-# Instalar dependencias
-npm install
+# Instalar dependencias con Bun
+bun install
 ```
 
 ### Desarrollo
 
 ```bash
 # Ejecutar servidor de desarrollo
-npm run dev
+bun run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la aplicación.
@@ -65,10 +69,10 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 
 ```bash
 # Compilar para producción
-npm run build
+bun run build
 
 # Ejecutar versión de producción
-npm start
+bun start
 ```
 
 ## 📖 Cómo Usar

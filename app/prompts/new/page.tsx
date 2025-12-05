@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ThemeToggle from '../../components/ThemeToggle';
 import XMLPromptEditor from '../../components/XMLPromptEditor';
+import { DEFAULT_XML_TEMPLATE } from '../../constants/templates';
 
 export default function NewPromptPage() {
   const router = useRouter();
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('<instructions>\nTu eres un asistente de IA experto.\n</instructions>\n\n<context>\nContexto adicional aquí.\n</context>\n\n<examples>\nEjemplos de uso.\n</examples>');
+  const [content, setContent] = useState(DEFAULT_XML_TEMPLATE);
 
   const generateUniqueId = (): string => {
     // Usar crypto.randomUUID() si está disponible, sino combinar timestamp + random
