@@ -22,7 +22,7 @@ export default function Home() {
             Editor de Prompts para IA (By FrancoJ)
           </h1>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Crea, edita y gestiona prompts para tus agentes de IA de forma simple y eficiente.
+            Crea, edita y gestiona prompts para tus agentesss de IAAA de FFforma simple y efFiciente.
           </p>
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
