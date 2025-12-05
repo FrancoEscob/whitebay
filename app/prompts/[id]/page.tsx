@@ -1,0 +1,148 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+
+interface Prompt {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+}
+
+export default function EditPromptPage() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params?.id as string;
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Esperar a que el parámetro id esté disponible después de la hidratación
+    if (!id) {
+      return;
+    }
+
+    const savedPrompts = localStorage.getItem('ai-prompts');
+    if (savedPrompts) {
+      const prompts: Prompt[] = JSON.parse(savedPrompts);
+      const prompt = prompts.find((p) => p.id === id);
+      if (prompt) {
+        setTitle(prompt.title);
+        setContent(prompt.content);
+        setLoading(false);
+      } else {
+        router.push('/prompts');
+      }
+    } else {
+      router.push('/prompts');
+    }
+  }, [id, router]);
+
+  const savePrompt = () => {
+    if (!title.trim() || !content.trim()) {
+      alert('Por favor completa el título y el contenido del prompt.');
+      return;
+    }
+
+    const savedPrompts = localStorage.getItem('ai-prompts');
+    if (!savedPrompts) return;
+
+    const prompts: Prompt[] = JSON.parse(savedPrompts);
+    const updatedPrompts = prompts.map((p) =>
+      p.id === id ? { ...p, title: title.trim(), content: content.trim() } : p
+    );
+
+    localStorage.setItem('ai-prompts', JSON.stringify(updatedPrompts));
+    router.push('/prompts');
+  };
+
+  const deletePrompt = () => {
+    if (confirm('¿Estás seguro de que quieres eliminar este prompt?')) {
+      const savedPrompts = localStorage.getItem('ai-prompts');
+      if (!savedPrompts) return;
+
+      const prompts: Prompt[] = JSON.parse(savedPrompts);
+      const updatedPrompts = prompts.filter((p) => p.id !== id);
+      localStorage.setItem('ai-prompts', JSON.stringify(updatedPrompts));
+      router.push('/prompts');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 dark:bg-black flex items-center justify-center">
+        <p className="text-zinc-600 dark:text-zinc-400">Cargando...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <Link
+          href="/prompts"
+          className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 mb-6 inline-block"
+        >
+          ← Volver a prompts
+        </Link>
+
+        <h1 className="text-3xl font-semibold text-black dark:text-zinc-50 mb-8">
+          Editar Prompt
+        </h1>
+
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-zinc-50 mb-2">
+              Título
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ej: Asistente de código Python"
+              className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-black dark:text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-zinc-50 mb-2">
+              Contenido del Prompt
+            </label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Escribe aquí el prompt para tu agente de IA..."
+              rows={15}
+              className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-black dark:text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white font-mono text-sm resize-none"
+            />
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={savePrompt}
+              className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors font-medium"
+            >
+              Guardar cambios
+            </button>
+            <Link
+              href="/prompts"
+              className="px-6 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors font-medium text-black dark:text-zinc-50"
+            >
+              Cancelar
+            </Link>
+            <button
+              onClick={deletePrompt}
+              className="ml-auto px-6 py-2 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
