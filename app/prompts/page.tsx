@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ThemeToggle from '../components/ThemeToggle';
 
 interface Prompt {
   id: string;
@@ -36,12 +37,15 @@ export default function PromptsPage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <Link
-            href="/"
-            className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 mb-4 inline-block"
-          >
-            ← Volver
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              href="/"
+              className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 inline-block"
+            >
+              ← Volver
+            </Link>
+            <ThemeToggle />
+          </div>
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-black dark:text-zinc-50">
               Prompts para IA

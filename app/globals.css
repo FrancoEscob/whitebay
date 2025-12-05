@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configurar modo oscuro basado en clase para Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,8 +15,16 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Configuración explícita para modo dark con clase */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
+}
+
+/* También respetar preferencia del sistema solo cuando no hay clase explícita */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.dark):not(.light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }

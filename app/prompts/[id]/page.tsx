@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import ThemeToggle from '../../components/ThemeToggle';
 
 interface Prompt {
   id: string;
@@ -83,12 +84,15 @@ export default function EditPromptPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <Link
-          href="/prompts"
-          className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 mb-6 inline-block"
-        >
-          ← Volver a prompts
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            href="/prompts"
+            className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 inline-block"
+          >
+            ← Volver a prompts
+          </Link>
+          <ThemeToggle />
+        </div>
 
         <h1 className="text-3xl font-semibold text-black dark:text-zinc-50 mb-8">
           Editar Prompt
