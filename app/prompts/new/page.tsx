@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ThemeToggle from '../../components/ThemeToggle';
+import XMLPromptEditor from '../../components/XMLPromptEditor';
 
 export default function NewPromptPage() {
   const router = useRouter();
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState('<instructions>\nTu eres un asistente de IA experto.\n</instructions>\n\n<context>\nContexto adicional aquí.\n</context>\n\n<examples>\nEjemplos de uso.\n</examples>');
 
   const generateUniqueId = (): string => {
     // Usar crypto.randomUUID() si está disponible, sino combinar timestamp + random
@@ -42,7 +43,7 @@ export default function NewPromptPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <Link
             href="/prompts"
@@ -71,18 +72,7 @@ export default function NewPromptPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-black dark:text-zinc-50 mb-2">
-              Contenido del Prompt
-            </label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Escribe aquí el prompt para tu agente de IA..."
-              rows={15}
-              className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-black dark:text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white font-mono text-sm resize-none"
-            />
-          </div>
+          <XMLPromptEditor content={content} onChange={setContent} />
 
           <div className="flex gap-3">
             <button

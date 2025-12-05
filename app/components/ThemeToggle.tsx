@@ -17,14 +17,12 @@ function getInitialTheme() {
 }
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(() => {
-    // Inicializar el estado basándose en el tema actual del DOM
-    if (typeof window === 'undefined') return false;
-    return getInitialTheme();
-  });
+  const [isDark, setIsDark] = useState(false); // Inicializar siempre como false para SSR
+  const [mounted, setMounted] = useState(false);
 
   // Sincronizar el DOM con el estado actual al montar
   useEffect(() => {
+    setMounted(true);
     const shouldBeDark = getInitialTheme();
     
     // Aplicar al DOM si es necesario
@@ -36,7 +34,7 @@ export default function ThemeToggle() {
       document.documentElement.setAttribute('data-theme', 'light');
     }
     
-    // Actualizar estado de forma síncrona
+    // Actualizar estado después de la hidratación
     setIsDark(shouldBeDark);
   }, []);
 
@@ -58,6 +56,19 @@ export default function ThemeToggle() {
       localStorage.setItem('theme', 'light');
     }
   };
+
+  // Durante SSR y antes de la hidratación, mostrar un estado neutral
+  if (!mounted) {
+    return (
+      <button
+        className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        aria-label="Cambiar tema"
+        title="Cambiar tema"
+      >
+        🌙
+      </button>
+    );
+  }
 
   return (
     <button
