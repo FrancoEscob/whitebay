@@ -9,10 +9,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const shouldBeDark = saved === 'dark' || (!saved && prefersDark);
     
+    // Asegurar que la clase se establezca correctamente
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
   }, []);
 

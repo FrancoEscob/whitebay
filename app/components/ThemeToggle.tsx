@@ -2,45 +2,59 @@
 
 import { useEffect, useState } from 'react';
 
+function getInitialTheme() {
+  if (typeof window === 'undefined') return false;
+  
+  // Verificar primero si ya hay una clase dark en el DOM (del script inline)
+  if (document.documentElement.classList.contains('dark')) {
+    return true;
+  }
+  
+  const saved = localStorage.getItem('theme');
+  if (saved) return saved === 'dark';
+  
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(() => {
-    // Inicializar estado desde localStorage o preferencia del sistema
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light') {
-        return saved === 'dark';
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return false;
+    // Inicializar el estado basándose en el tema actual del DOM
+    if (typeof window === 'undefined') return false;
+    return getInitialTheme();
   });
 
+  // Sincronizar el DOM con el estado actual al montar
   useEffect(() => {
-    // Verificar preferencia guardada o del sistema y aplicar clase
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = saved === 'dark' || (!saved && prefersDark);
+    const shouldBeDark = getInitialTheme();
     
-    setIsDark(shouldBeDark);
-    
-    // Aplicar o remover clase dark del elemento html
+    // Aplicar al DOM si es necesario
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
+    
+    // Actualizar estado de forma síncrona
+    setIsDark(shouldBeDark);
   }, []);
 
   const toggleTheme = () => {
-    const newIsDark = !isDark;
+    // Leer el estado actual del DOM para asegurar sincronización
+    const currentIsDark = document.documentElement.classList.contains('dark');
+    const newIsDark = !currentIsDark;
+    
     setIsDark(newIsDark);
     
     // Aplicar cambios inmediatamente al DOM
     if (newIsDark) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
     }
   };
