@@ -3,15 +3,27 @@
 import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Inicializar estado desde localStorage o preferencia del sistema
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') {
+        return saved === 'dark';
+      }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Verificar preferencia guardada o del sistema
+    // Verificar preferencia guardada o del sistema y aplicar clase
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const shouldBeDark = saved === 'dark' || (!saved && prefersDark);
     
     setIsDark(shouldBeDark);
+    
+    // Aplicar o remover clase dark del elemento html
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
     } else {
@@ -23,6 +35,7 @@ export default function ThemeToggle() {
     const newIsDark = !isDark;
     setIsDark(newIsDark);
     
+    // Aplicar cambios inmediatamente al DOM
     if (newIsDark) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
