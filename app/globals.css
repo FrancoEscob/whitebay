@@ -63,10 +63,6 @@ body {
 }
 
 /* Utilidades de delay para animaciones */
-.delay-500 {
-  animation-delay: 500ms;
-}
-
 .delay-1000 {
   animation-delay: 1000ms;
 }
